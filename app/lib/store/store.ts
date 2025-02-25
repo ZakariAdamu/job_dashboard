@@ -1,11 +1,11 @@
 import { create } from "zustand";
 
 interface AppState {
-	user: any | null;
-	jobs: any[];
+	user: {} | null;
+	jobs: [];
 	loading: boolean;
-	setUser: (user: any) => void;
-	setJobs: (jobs: any[]) => void;
+	setUser: (user: {}) => void;
+	setJobs: (jobs: []) => void;
 	setLoading: (loading: boolean) => void;
 }
 

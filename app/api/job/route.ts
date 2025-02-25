@@ -1,19 +1,4 @@
-// import { connectToDB } from "@/app/lib/mongoDB";
-// import { NextResponse } from "next/server";
-
-// export async function GET() {
-// 	try {
-// 		await connectToDB();
-// 		return NextResponse.json({ message: "MongoDB connection successful!" });
-// 	} catch (error) {
-// 		return NextResponse.json(
-// 			{ error: "MongoDB connection failed" },
-// 			{ status: 500 }
-// 		);
-// 	}
-// }
-
-import { auth } from "@/auth";
+// import { auth } from "@/auth";
 import Job from "@/app/lib/models/Job";
 import { NextRequest, NextResponse } from "next/server";
 import { connectToDB } from "@/app/lib/mongoDB";
@@ -21,7 +6,7 @@ import { Types } from "mongoose";
 
 export const POST = async (req: NextRequest) => {
 	try {
-		const session = await auth(); // Ensure auth() is awaited if it's an async function
+		// const session = await auth();
 		// Don't check user session for now
 		// if (!session) {
 		// 	return handleErrorResponse("Unauthorized, please sign in", 401);

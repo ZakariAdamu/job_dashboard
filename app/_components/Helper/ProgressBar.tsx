@@ -1,7 +1,5 @@
 "use client";
 
-import { useState } from "react";
-
 interface ProgressBarProps {
 	matchScore: number; // Expect a number between 0 and 100
 }
