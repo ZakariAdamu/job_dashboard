@@ -1,0 +1,20 @@
+import { create } from "zustand";
+
+interface AppState {
+	user: any | null;
+	jobs: any[];
+	loading: boolean;
+	setUser: (user: any) => void;
+	setJobs: (jobs: any[]) => void;
+	setLoading: (loading: boolean) => void;
+}
+
+export const useAppStore = create<AppState>((set) => ({
+	user: null,
+	jobs: [],
+	loading: false,
+
+	setUser: (user) => set({ user }),
+	setJobs: (jobs) => set({ jobs }),
+	setLoading: (loading) => set({ loading }),
+}));
