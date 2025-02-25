@@ -1,10 +1,17 @@
 import { create } from "zustand";
 
+interface User {
+	id: string;
+	name: string;
+	email: string;
+	// Add other properties as needed
+}
+
 interface AppState {
-	user: {} | null;
+	user: User | null;
 	jobs: [];
 	loading: boolean;
-	setUser: (user: {}) => void;
+	setUser: (user: User) => void;
 	setJobs: (jobs: []) => void;
 	setLoading: (loading: boolean) => void;
 }
