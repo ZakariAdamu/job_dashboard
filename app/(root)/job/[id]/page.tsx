@@ -20,9 +20,9 @@ export async function generateMetadata({
 	};
 }
 
-const JobDetailsPage = async ({ params }: { params: { id: string } }) => {
+const JobDetailsPage = async ({ params }: { params: { _id: string } }) => {
 	const session = await auth();
-	const job = await getJobById(params.id);
+	const job = await getJobById(params._id);
 
 	if (!job) {
 		return (
