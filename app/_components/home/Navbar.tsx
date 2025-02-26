@@ -2,12 +2,7 @@ import { auth } from "@/auth";
 // "use client";
 import Image from "next/image";
 import Link from "next/link";
-import { Session } from "next-auth";
 import UserMenu from "../Helper/UserMenu";
-
-// interface SessionProps {
-// 	session: Session;
-// }
 
 const Navbar = async () => {
 	const session = await auth();
