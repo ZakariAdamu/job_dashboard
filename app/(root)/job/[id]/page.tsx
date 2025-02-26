@@ -3,22 +3,22 @@ import JobCard from "@/app/_components/Helper/JobCard";
 import { auth } from "@/auth";
 import { getJobById } from "@/app/lib/actions/actions";
 import Link from "next/link";
-import { Metadata } from "next";
+// import { Metadata } from "next";
 import ProgressBar from "@/app/_components/Helper/ProgressBar";
 
-export async function generateMetadata({
-	params,
-}: {
-	params: { id: string };
-}): Promise<Metadata> {
-	const job = await getJobById(params.id);
-	return {
-		title: job ? `${job.title} at ${job.company}` : "Job Not Found",
-		description: job
-			? `Exciting opportunity for a ${job.title} at ${job.company}.`
-			: "Job details not available.",
-	};
-}
+// export async function generateMetadata({
+// 	params,
+// }: {
+// 	params: { id: string };
+// }): Promise<Metadata> {
+// 	const job = await getJobById(params.id);
+// 	return {
+// 		title: job ? `${job.title} at ${job.company}` : "Job Not Found",
+// 		description: job
+// 			? `Exciting opportunity for a ${job.title} at ${job.company}.`
+// 			: "Job details not available.",
+// 	};
+// }
 
 const JobDetailsPage = async ({ params }: { params: { id: string } }) => {
 	const session = await auth();
