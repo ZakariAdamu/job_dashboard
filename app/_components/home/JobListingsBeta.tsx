@@ -21,7 +21,7 @@ const JobListingsBeta = async () => {
 	}
 
 	return (
-		<section className="py-8">
+		<section className="py-8 my-10">
 			<Heading
 				mainHeading="Job Listings"
 				subHeading="Review the following job listings and apply now."

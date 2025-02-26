@@ -4,7 +4,7 @@ import JobCategoryCard from "./JobCategoryCard";
 
 const JobCategory = () => {
 	return (
-		<div className="pt-10 pb-5 lg:mt-[90px]">
+		<div className="pt-10 pb-5 my-10 md:min-h-[60vh]">
 			<Heading
 				mainHeading="Popular Job Categories"
 				subHeading="Recent jobs live - 293 added today"
