@@ -5,10 +5,12 @@ import ProgressBar from "@/app/_components/Helper/ProgressBar";
 import ApplyButton from "@/app/_components/Helper/ApplyButton";
 
 // Generate Metadata for SEO Optimization
-export async function generateMetadata(props: { params: Promise<{ id: string }> }) {
-    const params = await props.params;
-    const job = await getJobById(params.id);
-    return {
+export async function generateMetadata(props: {
+	params: Promise<{ id: string }>;
+}) {
+	const params = await props.params;
+	const job = await getJobById(params.id);
+	return {
 		title: job ? `${job.title} at ${job.company}` : "Job Not Found",
 		description: job
 			? `Exciting opportunity for a ${job.title} at ${job.company}, ${job.location}.`
@@ -27,15 +29,15 @@ const userSkills = [
 	"Node.js",
 	// "Express.js",
 	// "MongoDB",
-	// "Git & GitHub",
+	"Git & GitHub",
 ];
 
 const JobDetailsPage = async (props: { params: Promise<{ id: string }> }) => {
-    const params = await props.params;
-    const job = await getJobById(params.id);
+	const params = await props.params;
+	const job = await getJobById(params.id);
 
-    // If job does not exist, return a "Not Found" state
-    if (!job) {
+	// If job does not exist, return a "Not Found" state
+	if (!job) {
 		return (
 			<div className="text-center mt-20">
 				<h1 className="text-2xl font-bold text-red-600">Job Not Found</h1>
@@ -52,24 +54,24 @@ const JobDetailsPage = async (props: { params: Promise<{ id: string }> }) => {
 		);
 	}
 
-    // Extract job details
-    const { title, company, location, requiredSkills = [] } = job;
+	// Extract job details
+	const { title, company, location, requiredSkills = [] } = job;
 
-    // Calculate Skill Match Percentage
-    const matchedSkills = userSkills.filter((skill) =>
+	// Calculate Skill Match Percentage
+	const matchedSkills = userSkills.filter((skill) =>
 		requiredSkills.includes(skill)
 	).length;
-    const matchScore = requiredSkills.length
+	const matchScore = requiredSkills.length
 		? Math.round((matchedSkills / requiredSkills.length) * 100)
 		: 50;
 
-    // Find Missing Skills
-    const missingSkills = requiredSkills.filter(
+	// Find Missing Skills
+	const missingSkills = requiredSkills.filter(
 		(skill: string) => !userSkills.includes(skill)
 	);
-    const hasMissingSkills = missingSkills.length > 0;
+	const hasMissingSkills = missingSkills.length > 0;
 
-    return (
+	return (
 		<div className="mt-20 mb-12">
 			<div className="flex flex-col sm:flex-row items-center justify-between w-[80%] mx-auto">
 				<div className="flex-[0.7]">
