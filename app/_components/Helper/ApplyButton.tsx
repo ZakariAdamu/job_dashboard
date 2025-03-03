@@ -3,30 +3,31 @@
 import { useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { useAppStore } from "@/app/lib/store/store";
+import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import Modal from "@/app/_components/Helper/Modal"; //
-// Ensure you have this component
-// import { IJob } from "@/app/lib/models/Job";
+import Modal from "@/app/_components/Helper/Modal";
 
-const ApplyButton = ({
-	// job,
-	missingSkills,
-	hasMissingSkills,
-}: {
-	// job: IJob;
+interface ApplyButtonProps {
 	missingSkills: string[];
 	hasMissingSkills: boolean;
+}
+
+const ApplyButton: React.FC<ApplyButtonProps> = ({
+	missingSkills,
+	hasMissingSkills,
 }) => {
-	const { user } = useAppStore();
-	console.log(user?.email);
-	const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+	const [isModalOpen, setIsModalOpen] = useState(false);
+	const { data: session, status } = useSession();
 	const router = useRouter();
 
 	// Handle Apply Click
 	const handleApplyClick = () => {
-		if (!user) {
+		if (status === "loading") return; // Prevent clicking while session is loading
+
+		if (!session) {
+			toast.info("Please sign up to apply.");
 			router.push("/signup");
+			return;
 		}
 		if (hasMissingSkills) {
 			setIsModalOpen(true);
@@ -46,12 +47,17 @@ const ApplyButton = ({
 			{/* Apply Now Button */}
 			<button
 				onClick={handleApplyClick}
-				className="px-8 py-3 bg-blue-600 rounded-lg text-white font-semibold hover:bg-blue-700 transition-all duration-300"
+				disabled={status === "loading"}
+				className={`px-8 py-3 rounded-lg text-white font-semibold transition-all duration-300 ${
+					status === "loading"
+						? "bg-gray-400 cursor-not-allowed"
+						: "bg-blue-600 hover:bg-blue-700"
+				}`}
 			>
-				Apply Now
+				{status === "loading" ? "Checking..." : "Apply Now"}
 			</button>
 
-			{/* Toast Container */}
+			{/* Toast Notifications */}
 			<ToastContainer position="top-center" autoClose={3000} />
 
 			{/* Missing Skills Modal */}

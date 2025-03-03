@@ -19,7 +19,7 @@ export const getJobs = async (): Promise<IJob[]> => {
 	}
 };
 
-
+// Get a unique / dynamic job by ID
 export const getJobById = async (id: string) => {
 	try {
 		if (!id) throw new Error("Job ID is required");
@@ -39,8 +39,6 @@ export const getJobById = async (id: string) => {
 		}
 
 		const { job } = await response.json();
-
-		// Optionally revalidate specific cache tags for fresh updates
 
 		return job || null;
 	} catch (error) {
