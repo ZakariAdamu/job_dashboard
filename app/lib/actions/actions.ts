@@ -19,26 +19,32 @@ export const getJobs = async (): Promise<IJob[]> => {
 	}
 };
 
+
 export const getJobById = async (id: string) => {
 	try {
-		const response = await fetch(
-			`${process.env.NEXT_PUBLIC_API_URL}/api/job?id=${id}`,
-			{
-				method: "GET",
-				headers: { "Content-Type": "application/json" },
-				cache: "no-store", // Avoid caching outdated job info
-			}
-		);
+		if (!id) throw new Error("Job ID is required");
 
+		const apiUrl = new URL(`/api/job/${id}`, process.env.NEXT_PUBLIC_API_URL);
+		const response = await fetch(apiUrl.toString(), {
+			method: "GET",
+			headers: { "Content-Type": "application/json" },
+			next: { revalidate: 60 }, // Revalidate data every 60 seconds (ISR)
+		});
+
+		// Handle non-200 responses
 		if (!response.ok) {
-			console.error(`Error fetching job (ID: ${id})`);
+			const errorMessage = `Error ${response.status}: ${response.statusText}`;
+			console.error(`Failed to fetch job (ID: ${id}) - ${errorMessage}`);
 			return null;
 		}
 
-		const data = await response.json();
-		return data.job || null;
+		const { job } = await response.json();
+
+		// Optionally revalidate specific cache tags for fresh updates
+
+		return job || null;
 	} catch (error) {
-		console.error("Error fetching job by ID:", error);
+		console.error(`Error fetching job by ID (${id}):`, error);
 		return null;
 	}
 };

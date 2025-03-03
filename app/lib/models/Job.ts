@@ -1,6 +1,7 @@
 import { Schema, Document, model, models } from "mongoose";
 
 export interface IJob extends Document {
+	id?: string;
 	title: string;
 	company: string;
 	location: string;
@@ -13,6 +14,7 @@ export interface IJob extends Document {
 
 const JobSchema = new Schema<IJob>(
 	{
+		id: { type: String, required: false },
 		title: { type: String, required: true },
 		company: { type: String, required: true },
 		location: { type: String, required: true },
@@ -24,6 +26,7 @@ const JobSchema = new Schema<IJob>(
 		},
 		requiredSkills: { type: [String], required: true },
 		matchScore: { type: Number, default: 50 },
+		createdAt: { type: Date, default: Date.now },
 	},
 	{ timestamps: true }
 );

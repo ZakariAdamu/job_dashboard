@@ -4,6 +4,8 @@ import { FaMapLocationDot } from "react-icons/fa6";
 
 interface JobCardProps {
 	job: IJob;
+	
+
 }
 const JobCard = ({ job }: JobCardProps) => {
 	return (
@@ -45,7 +47,7 @@ const JobCard = ({ job }: JobCardProps) => {
 					Required Skills: {job.requiredSkills}
 				</div>
 				<div className="flex items-center justify-between mt-5 text-gray-500 text-[13px] font-semibold">
-					Match Score: {job.matchScore}
+					Avg. Match Score: {job.matchScore}%
 				</div>
 			</div>
 		</div>
