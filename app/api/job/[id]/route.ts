@@ -3,11 +3,9 @@ import { connectToDB } from "@/app/lib/mongoDB";
 import Job from "@/app/lib/models/Job";
 
 // ✅ Fix: Use `context` and await `params`
-export async function GET(
-	req: NextRequest,
-	{ params }: { params: { id: string } }
-) {
-	try {
+export async function GET(req: NextRequest, props: { params: Promise<{ id: string }> }) {
+    const params = await props.params;
+    try {
 		// ✅ Ensure DB is connected
 		await connectToDB();
 
