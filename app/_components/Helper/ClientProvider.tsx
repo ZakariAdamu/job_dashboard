@@ -28,7 +28,7 @@ const ClientProvider = ({ children }: Props) => {
 		};
 
 		fetchSession();
-	}, [setUser]);
+	}, [setUser, router]);
 
 	return <SessionProvider>{children}</SessionProvider>;
 };

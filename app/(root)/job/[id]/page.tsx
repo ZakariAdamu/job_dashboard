@@ -42,7 +42,7 @@ const JobDetailsPage = async (props: { params: Promise<{ id: string }> }) => {
 			<div className="text-center mt-20">
 				<h1 className="text-2xl font-bold text-red-600">Job Not Found</h1>
 				<p className="mt-4 text-gray-600">
-					The job listing you're looking for doesn't exist.
+					The job listing you&apos;re looking for doesn&apos;t exist.
 				</p>
 				<Link
 					href="/"
