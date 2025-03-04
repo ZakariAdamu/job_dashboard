@@ -13,17 +13,24 @@ const cors = Cors({
 });
 
 // Middleware helper to run CORS
-function runMiddleware(req: NextRequest) {
+function runMiddleware(req: NextRequest): Promise<void> {
 	const corsRequest = {
 		method: req.method,
 		headers: Object.fromEntries(req.headers.entries()),
 	} as Cors.CorsRequest;
 
-	return new Promise((resolve, reject) => {
-		cors(corsRequest, {} as any, (result: any) => {
-			if (result instanceof Error) reject(result);
-			resolve(result);
-		});
+	return new Promise<void>((resolve, reject) => {
+		cors(
+			corsRequest,
+			{
+				setHeader: () => {},
+				end: () => {},
+			},
+			(result: unknown) => {
+				if (result instanceof Error) reject(result);
+				resolve();
+			}
+		);
 	});
 }
 
