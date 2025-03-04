@@ -1,10 +1,10 @@
-import JobListingsBeta from "@/app/_components/home/JobListingsBeta";
+import JobListings from "@/app/_components/home/JobListings";
 import React from "react";
 
 const page = () => {
 	return (
 		<div>
-			<JobListingsBeta />
+			<JobListings />
 		</div>
 	);
 };

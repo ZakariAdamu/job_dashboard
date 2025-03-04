@@ -3,6 +3,29 @@ import Job from "@/app/lib/models/Job";
 import { NextRequest, NextResponse } from "next/server";
 import { connectToDB } from "@/app/lib/mongoDB";
 import { Types } from "mongoose";
+import Cors from "cors";
+
+// Initialize CORS middleware
+const cors = Cors({
+	origin: process.env.NEXT_PUBLIC_API_URL || "*", // Allow frontend origin
+	methods: ["GET", "POST", "PUT", "DELETE"],
+	credentials: true, // Allow cookies and sessions
+});
+
+// Middleware helper to run CORS
+function runMiddleware(req: NextRequest) {
+	const corsRequest = {
+		method: req.method,
+		headers: Object.fromEntries(req.headers.entries()),
+	} as Cors.CorsRequest;
+
+	return new Promise((resolve, reject) => {
+		cors(corsRequest, {} as any, (result: any) => {
+			if (result instanceof Error) reject(result);
+			resolve(result);
+		});
+	});
+}
 
 export const POST = async (req: NextRequest) => {
 	try {
@@ -11,6 +34,8 @@ export const POST = async (req: NextRequest) => {
 		// if (!session) {
 		// 	return handleErrorResponse("Unauthorized, please sign in", 401);
 		// }
+
+		await runMiddleware(req);
 
 		await connectToDB();
 
@@ -54,6 +79,8 @@ const handleErrorResponse = (message: string, status: number) =>
 
 export const GET = async (req: NextRequest) => {
 	try {
+		await runMiddleware(req);
+
 		await connectToDB();
 
 		const { searchParams } = new URL(req.url);

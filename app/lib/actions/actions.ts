@@ -6,6 +6,7 @@ export const getJobs = async (): Promise<IJob[]> => {
 	try {
 		const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/job`, {
 			method: "GET",
+			credentials: "include", // Ensure cookies/auth are sent
 			headers: { "Content-Type": "application/json" },
 		});
 
@@ -27,6 +28,7 @@ export const getJobById = async (id: string) => {
 		const apiUrl = new URL(`/api/job/${id}`, process.env.NEXT_PUBLIC_API_URL);
 		const response = await fetch(apiUrl.toString(), {
 			method: "GET",
+			credentials: "include", // Ensure cookies/auth are sent
 			headers: { "Content-Type": "application/json" },
 			next: { revalidate: 60 }, // Revalidate data every 60 seconds (ISR)
 		});

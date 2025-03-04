@@ -3,7 +3,7 @@ import Link from "next/link";
 import JobCard from "../Helper/JobCard";
 import { getJobs } from "@/app/lib/actions/actions";
 
-const JobListingsBeta = async () => {
+const JobListings = async () => {
 	const jobs = await getJobs();
 	// console.log(typeof jobs);
 
@@ -46,4 +46,4 @@ const JobListingsBeta = async () => {
 	);
 };
 
-export default JobListingsBeta;
+export default JobListings;
