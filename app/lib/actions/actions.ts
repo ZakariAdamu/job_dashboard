@@ -1,28 +1,3 @@
-// Get all jobs
-
-import { IJob } from "../models/Job";
-
-// export const getJobs = async (): Promise<IJob[]> => {
-// 	try {
-// 		if (!process.env.NEXT_PUBLIC_API_URL)
-// 			throw new Error("API URL is not defined");
-
-// 		const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/job`, {
-// 			method: "GET",
-// 			credentials: "include", // Ensure cookies/auth are sent
-// 			headers: { "Content-Type": "application/json" },
-// 		});
-
-// 		if (!response.ok) throw new Error(`Error: ${response.status}`);
-
-// 		const data = await response.json();
-// 		return Array.isArray(data.jobs) ? data.jobs : [];
-// 	} catch (error) {
-// 		console.error("Error fetching jobs:", error);
-// 		return [];
-// 	}
-// };
-
 // Get a unique / dynamic job by ID
 export const getJobById = async (id: string) => {
 	try {
