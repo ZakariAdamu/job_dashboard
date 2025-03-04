@@ -1,75 +1,45 @@
-// import { auth } from "@/auth";
-import Job from "@/app/lib/models/Job";
 import { NextRequest, NextResponse } from "next/server";
 import { connectToDB } from "@/app/lib/mongoDB";
-import { Types } from "mongoose";
-import Cors from "cors";
+import Job from "@/app/lib/models/Job";
+import { z } from "zod";
 
-// Initialize CORS middleware
-const cors = Cors({
-	origin: process.env.NEXT_PUBLIC_API_URL || "*", // Allow frontend origin
-	methods: ["GET", "POST", "PUT", "DELETE"],
-	credentials: true, // Allow cookies and sessions
+// ✅ Input Validation Schema using Zod
+const jobSchema = z.object({
+	title: z.string().min(2, "Title is too short"),
+	company: z.string().min(2, "Company name is too short"),
+	location: z.string().min(2, "Location is required"),
+	salary: z.number().positive("Salary must be a positive number"),
+	requiredSkills: z
+		.array(z.string())
+		.nonempty("At least one skill is required"),
 });
 
-// Middleware helper to run CORS
-function runMiddleware(req: NextRequest): Promise<void> {
-	const corsRequest = {
-		method: req.method,
-		headers: Object.fromEntries(req.headers.entries()),
-	} as Cors.CorsRequest;
+// 🔹 Error Response Helper
+const handleErrorResponse = (message: string, status: number) =>
+	NextResponse.json({ error: message }, { status });
 
-	return new Promise<void>((resolve, reject) => {
-		cors(
-			corsRequest,
-			{
-				setHeader: () => {},
-				end: () => {},
-			},
-			(result: unknown) => {
-				if (result instanceof Error) reject(result);
-				resolve();
-			}
-		);
-	});
-}
-
+/**
+ * 📌 [POST] Create a new job listing
+ */
 export const POST = async (req: NextRequest) => {
 	try {
-		// const session = await auth();
-		// Don't check user session for now
-		// if (!session) {
-		// 	return handleErrorResponse("Unauthorized, please sign in", 401);
-		// }
-
-		await runMiddleware(req);
-
 		await connectToDB();
 
-		// Parse request body safely
-		const body = await req.json().catch(() => null);
-		if (!body) {
-			return handleErrorResponse("Invalid JSON payload", 400);
+		// ✅ Safely parse request body
+		const jsonBody = await req.json().catch(() => null);
+		if (!jsonBody) return handleErrorResponse("Invalid JSON payload", 400);
+
+		// ✅ Validate input using Zod
+		const validation = jobSchema.safeParse(jsonBody);
+		if (!validation.success) {
+			const errorMessage = validation.error.errors
+				.map((err) => err.message)
+				.join(", ");
+			return handleErrorResponse(`Validation error: ${errorMessage}`, 400);
 		}
 
-		const { title, company, location, salary, requiredSkills } = body;
-
-		// Validate input
-		if (![title, company, location, salary, requiredSkills].every(Boolean)) {
-			return handleErrorResponse("All fields are required", 400);
-		}
-
-		// Create and save the job entry
-		const newJob = new Job({
-			title,
-			company,
-			location,
-			salary,
-			requiredSkills,
-			matchScore: "0",
-		});
-
-		await newJob.save();
+		// ✅ Create and save the job entry
+		const newJob = await Job.create(validation.data);
 
 		return NextResponse.json(
 			{ message: "Job created successfully", job: newJob },
@@ -77,36 +47,23 @@ export const POST = async (req: NextRequest) => {
 		);
 	} catch (error) {
 		console.error("Job creation error:", error);
-		return handleErrorResponse("Internal server error", 500);
+		return handleErrorResponse("Internal Server Error", 500);
 	}
 };
 
-const handleErrorResponse = (message: string, status: number) =>
-	NextResponse.json({ error: message }, { status });
-
-export const GET = async (req: NextRequest) => {
+/**
+ * 📌 [GET] Fetch all jobs
+ */
+export const GET = async () => {
 	try {
-		await runMiddleware(req);
-
 		await connectToDB();
 
-		const { searchParams } = new URL(req.url);
-		const jobId = searchParams.get("id");
+		// ✅ Fetch only necessary fields to optimize response size
+		const jobs = await Job.find(
+			{},
+			"title company location salary requiredSkills"
+		).lean();
 
-		if (jobId) {
-			// Fetch a single job
-			if (!Types.ObjectId.isValid(jobId)) {
-				return handleErrorResponse("Invalid Job ID format", 400);
-			}
-
-			const job = await Job.findById(jobId).lean();
-			if (!job) return handleErrorResponse("Job not found", 404);
-
-			return NextResponse.json({ job }, { status: 200 });
-		}
-
-		// Fetch all jobs
-		const jobs = await Job.find({}).lean();
 		return NextResponse.json(
 			{ jobs: jobs.length ? jobs : [] },
 			{ status: 200 }
